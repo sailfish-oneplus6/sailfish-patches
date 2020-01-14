@@ -1,0 +1,84 @@
+From e4a9e3a8aa84b4d08c60389baac8d3064c609187 Mon Sep 17 00:00:00 2001
+From: Caleb Connolly <caleb@connolly.tech>
+Date: Tue, 14 Jan 2020 20:34:21 +0000
+Subject: [PATCH] Modified status area to move clock to the left
+
+---
+ StatusArea.qml | 51 ++++++++++++++++----------------------------------
+ 1 file changed, 16 insertions(+), 35 deletions(-)
+ mode change 100755 => 100644 StatusArea.qml
+
+diff --git a/StatusArea.qml b/StatusArea.qml
+old mode 100755
+new mode 100644
+index 0cc89f7..0bf15a6
+--- a/StatusArea.qml
++++ b/StatusArea.qml
+@@ -51,6 +51,21 @@ Item {
+                 color: statusArea.color
+             }
+ 
++            ClockItem {
++                id: clock
++
++                width: Math.min(implicitWidth, centralArea.width)
++                y: (parent.height - height)/2
++                updatesEnabled: recentlyOnDisplay
++                color: Theme.primaryColor
++                font { pixelSize: Theme.fontSizeMedium; family: Theme.fontFamilyHeading }
++
++                Connections {
++                    target: Lipstick.compositor
++                    onDisplayAboutToBeOn: clock.forceUpdate()
++                }
++            }
++
+             ProfileStatusIndicator {
+                 anchors.verticalCenter: parent.verticalCenter
+             }
+@@ -85,41 +100,7 @@ Item {
+                 }
+             }
+         }
+-
+-        Item {
+-            id: centralArea
+-            anchors {
+-                top: iconBar.top
+-                bottom: iconBar.bottom
+-                left: leftIndicators.right
+-                leftMargin: Theme.paddingMedium
+-                right: rightIndicators.left
+-                rightMargin: Theme.paddingMedium
+-            }
+-            Loader {
+-                // If possible position this item centrally within the iconBar
+-                x: Math.max((iconBar.width - width)/2 - parent.x, 0)
+-                y: (parent.height - height)/2
+-                sourceComponent: lockscreenMode ? (Telephony.multiSimSupported ? null : operatorName) : timeText
+-            }
+-        }
+-
+-        Component {
+-            id: timeText
+-            ClockItem {
+-                id: clock
+-
+-                width: Math.min(implicitWidth, centralArea.width)
+-                updatesEnabled: recentlyOnDisplay
+-                color: Theme.primaryColor
+-                font { pixelSize: Theme.fontSizeMedium; family: Theme.fontFamilyHeading }
+-
+-                Connections {
+-                    target: Lipstick.compositor
+-                    onDisplayAboutToBeOn: clock.forceUpdate()
+-                }
+-            }
+-        }
++        
+         Component {
+             id: operatorName
+             CellularNetworkNameStatusIndicator {
+-- 
+2.24.1
+
