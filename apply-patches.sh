@@ -2,9 +2,10 @@
 
 set -e
 
-WD=`pwd`/patches
+cd patches
+WD=`pwd`
 ROOT=$1
-cd $WD
+
 
 for patch in `find . -name *.patch |sort`; do
     cd $ROOT/$(dirname $patch)
